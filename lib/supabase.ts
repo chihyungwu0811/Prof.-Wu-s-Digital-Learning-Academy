@@ -56,7 +56,7 @@ export async function fetchAcademyData() {
   const questions = questionsResult.data || [];
   const lessonsWithAssets = await Promise.all(lessons.map(async (l: any) => {
     let assetUrl: string | null = null;
-    if (l.asset) { const signed = await supabase.storage.from('lesson-assets').createSignedUrl(l.asset, 600); fail(signed.error); assetUrl = signed.data.signedUrl; }
+    if (l.asset) { const signed = await supabase.storage.from('lesson-assets').createSignedUrl(l.asset, 600); fail(signed.error); assetUrl = signed.data?.signedUrl ?? null; }
     return { ...l, assetUrl, questions: questions.filter((q: any) => q.lesson_id === l.id).map((q: any) => ({ prompt: q.prompt, options: q.options, answer: q.correct_index, explanation: q.explanation })) };
   }));
   return {
@@ -139,7 +139,7 @@ export async function getLesson(id: string) {
   }
   const progress = await supabase.from('progress').select('*').eq('lesson', id).maybeSingle(); fail(progress.error);
   let assetUrl: string | null = null;
-  if (data.asset) { const signed = await supabase.storage.from('lesson-assets').createSignedUrl(data.asset, 600); fail(signed.error); assetUrl = signed.data.signedUrl; }
+  if (data.asset) { const signed = await supabase.storage.from('lesson-assets').createSignedUrl(data.asset, 600); fail(signed.error); assetUrl = signed.data?.signedUrl ?? null; }
   return { ...data, subject_title: (data as any).subjects?.title, questions, ...(progress.data || {}), assetUrl };
 }
 
