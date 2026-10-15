@@ -22,8 +22,7 @@
       }
     ],
     "types": [
-      "node",
-      "@cloudflare/workers-types"
+      "node"
     ],
     "incremental": true
   },
